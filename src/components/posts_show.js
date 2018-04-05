@@ -42,7 +42,7 @@ class PostsShow extends Component {
 }
 
 PostsShow.propTypes = {
-  post: PropTypes.object.isRequired,
+  post: PropTypes.object,
   fetchPost: PropTypes.func.isRequired,
 };
 
