@@ -3,61 +3,35 @@ import { Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createPost } from '../actions';
+import RenderField from './render_field';
+import validate from './validate';
 
 class PostsNew extends Component {
-	renderField = (field)=>{
-		const { meta: { touched, error } } = field;
-		const className = `form-group ${touched && error && 'has-danger'}`;
-		return (
-			<div className={className}>
-				<label>{field.label}</label>
-				<input className="form-control" type="text"{...field.input}/>
-				<div className="text-help">
-					{ touched && error }
-				</div>
-			</div>
-		)
-	}
-	onSubmit = (values)=>{
-		this.props.createPost(values, ()=>{
-			this.props.history.push('/');
-		});
-	}
+  constructor(props) {
+    super(props);
+  }
 
-	render(){
-		const { handleSubmit } = this.props;
-		return(
-			<form onSubmit={handleSubmit(this.onSubmit)}> 
-				<Field label="Title" name="title" component={this.renderField}/>
-				<Field label="Tags" name="tags" component={this.renderField}/>
-				<Field label="Post Content" name="content" component={this.renderField}/>
-				<button type="submit" className="btn btn-primary">Submit</button>
-				<Link className="btn btn-danger" to="/">
-					Cancel
-				</Link>	
-			</form>
-		);
-	};
-};
-
-function validate(values){
-	const errors = {};
-
-	// Check that all fields have some value
-	if (!values.title){
-		errors.title = "Enter a title!"
-	}
-	if (!values.tags){
-		errors.tags = "Enter some tags!"
-	}
-	if (!values.content){
-		errors.content = "Enter some content!"
-	}
-
-	return errors
+  onSubmit = (values) => {
+    this.props.createPost(values, () => {
+      this.props.history.push('/');
+    });
+  }
+  
+  render() {
+    const { handleSubmit } = this.props;
+    return (
+      <form onSubmit={handleSubmit(this.onSubmit)}>
+        <Field label="Title" name="title" component={RenderField} />
+        <Field label="Tags" name="tags" component={RenderField} />
+        <Field label="Post Content" name="content" component={RenderField} />
+        <button type="submit" className="btn btn-primary">Submit</button>
+        <Link className="btn btn-danger" to="/">
+          Cancel
+        </Link>
+      </form>
+    );
+  }
 }
 
-export default reduxForm({ validate, form: 'NewPostsForm' })(
-	connect(null,{ createPost })(PostsNew)
-);
+export default reduxForm({ validate, form: 'NewPostsForm' })(connect(null, { createPost })(PostsNew));
 
